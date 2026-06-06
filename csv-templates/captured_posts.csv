@@ -1,0 +1,4 @@
+platform,group_name,city,market,request_category,urgency,post_datetime,original_url,raw_text
+facebook_group,Olive Branch Community,Olive Branch,DeSoto County,spring_repair,high,2026-06-05T08:00:00Z,https://facebook.com/groups/ob/posts/1,Garage door spring snapped who do you recommend
+nextdoor,Southaven Neighbors,Southaven,DeSoto County,company_recommendation,medium,2026-06-04T14:00:00Z,https://nextdoor.com/p/2,Looking for a reliable garage door company any local folks
+reddit,r/memphis,Memphis,Memphis metro,opener_repair,low,2026-06-02T19:00:00Z,https://reddit.com/r/memphis/3,Opener just clicks worth repairing or replacing

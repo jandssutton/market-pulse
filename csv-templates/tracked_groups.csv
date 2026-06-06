@@ -1,0 +1,4 @@
+platform,name,city,market,url,is_private,authorized,notes
+facebook_group,Olive Branch Community,Olive Branch,DeSoto County,https://facebook.com/groups/ob,true,true,Authorized member capture only
+nextdoor,Southaven Neighbors,Southaven,DeSoto County,https://nextdoor.com/g/southaven,true,true,Authorized member capture only
+reddit,r/memphis,Memphis,Memphis metro,https://reddit.com/r/memphis,false,false,Public via official API

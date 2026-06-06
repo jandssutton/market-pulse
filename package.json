@@ -1,0 +1,14 @@
+{
+  "name": "market-pulse",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Market Pulse — local market-intelligence & competitor-popularity tracking for Inside Track Garage Door. Standalone module; does not touch the Operations Hub.",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test:dedupe": "node --test"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

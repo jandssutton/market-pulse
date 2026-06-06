@@ -1,0 +1,4 @@
+name,service_area,website,phone,google_rating,google_review_count,facebook_url,tier,org_type,scam_concern,notes
+Precision Garage Door,Memphis metro,https://example.com,901-555-0101,4.6,820,https://facebook.com/precision,major,franchise,false,Premium pricing
+A-1 Overhead Door,DeSoto County,https://example.com,662-555-0102,4.8,310,https://facebook.com/a1overhead,major,local_independent,false,Strong local reputation
+Memphis Door Pros,Memphis,,901-555-0103,4.2,140,,minor,local_independent,false,Cheap but slow

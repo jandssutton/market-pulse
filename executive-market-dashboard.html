@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Pulse — Executive Dashboard · Inside Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1114; --surface:#14171a; --surface-2:#1b1f24; --line:#262b31;
+    --ink:#eef1f4; --ink-dim:#9aa4ad; --ink-faint:#69727b;
+    --orange:#ff5a1f; --green:#25b865; --red:#ef4444; --amber:#f5a524; --blue:#3b82f6;
+    --display:'Archivo',sans-serif; --body:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+    background-image:radial-gradient(circle at 12% -10%,rgba(255,90,31,.07),transparent 40%);
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1280px;margin:0 auto;padding:28px 28px 60px}
+  header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .mark{width:42px;height:42px;border-radius:8px;background:var(--orange);position:relative;flex:none;
+    box-shadow:0 0 0 1px rgba(255,255,255,.06),0 8px 24px rgba(255,90,31,.25)}
+  .mark::before,.mark::after{content:"";position:absolute;background:#0e1114}
+  .mark::before{inset:9px 9px auto 9px;height:4px}
+  .mark::after{inset:18px 9px 9px 9px;width:4px;left:19px}
+  h1{font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:-.02em;margin:0;line-height:1}
+  .sub{color:var(--ink-faint);font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;margin-top:6px}
+  .period{font-family:var(--mono);font-size:12px;color:var(--ink-dim);text-align:right}
+  .period b{display:block;color:var(--ink);font-size:15px;margin-top:3px}
+  .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    padding:3px 7px;border-radius:4px;border:1px solid var(--line);color:var(--ink-dim)}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
+  .kpi .lab{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);font-family:var(--mono)}
+  .kpi .val{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.05;margin-top:8px;letter-spacing:-.02em}
+  .kpi .meta{font-size:12px;color:var(--ink-dim);margin-top:6px}
+  .kpi .accent{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}
+  .kpi.green .accent{background:var(--green)} .kpi.red .accent{background:var(--red)} .kpi.amber .accent{background:var(--amber)}
+  .delta{font-family:var(--mono);font-weight:600}
+  .up{color:var(--green)} .down{color:var(--red)}
+
+  .grid{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;margin-top:14px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .card h2{font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:.02em;margin:0 0 2px;
+    text-transform:uppercase}
+  .card .hint{font-size:11px;color:var(--ink-faint);font-family:var(--mono);margin-bottom:14px}
+
+  table{width:100%;border-collapse:collapse}
+  th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);
+    text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);font-weight:600}
+  td{padding:10px 8px;border-bottom:1px solid rgba(38,43,49,.55);font-size:14px;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .rank{font-family:var(--mono);font-weight:700;color:var(--ink-faint);width:26px}
+  .rank.r1{color:var(--orange)} .rank.r2{color:var(--ink)} .rank.r3{color:var(--ink-dim)}
+  .co{font-weight:600}
+  .pill{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid var(--line);color:var(--ink-dim)}
+  .pill.major{color:var(--red);border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08)}
+  .pill.minor{color:var(--ink-dim)}
+  .pill.lead{color:var(--amber);border-color:rgba(245,165,36,.4);background:rgba(245,165,36,.08)}
+  .num{font-family:var(--mono);font-weight:600;text-align:right}
+  .bar{position:relative;height:7px;border-radius:99px;background:var(--surface-2);overflow:hidden;min-width:90px}
+  .bar > i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--orange),#ff7a47)}
+  .score{font-family:var(--mono);font-weight:700;font-size:15px}
+  .threat{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px}
+  .threat.hi{color:var(--red);background:rgba(239,68,68,.12)}
+  .threat.md{color:var(--amber);background:rgba(245,165,36,.12)}
+  .threat.lo{color:var(--ink-dim);background:var(--surface-2)}
+
+  .stacklist{display:flex;flex-direction:column;gap:12px}
+  .row2{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;border-bottom:1px solid rgba(38,43,49,.55)}
+  .row2:last-child{border-bottom:none;padding-bottom:0}
+  .row2 .k{font-size:13px;color:var(--ink-dim)} .row2 .v{font-family:var(--mono);font-weight:700;font-size:16px}
+  .city{display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(38,43,49,.4)}
+  .city:last-child{border-bottom:none}
+  .city .leader{color:var(--ink);font-weight:600}
+  .city .m{font-family:var(--mono);color:var(--ink-faint);font-size:11px}
+  .opp{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(38,43,49,.45)}
+  .opp:last-child{border-bottom:none}
+  .dot{width:8px;height:8px;border-radius:99px;margin-top:5px;flex:none;background:var(--orange)}
+  .opp.crit .dot{background:var(--red)} .opp.warn .dot{background:var(--amber)}
+  .opp .t{font-size:13px}.opp .s{font-size:11px;color:var(--ink-faint);font-family:var(--mono);margin-top:2px}
+  .foot{margin-top:24px;color:var(--ink-faint);font-size:11px;font-family:var(--mono);text-align:center;line-height:1.7}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  @media(max-width:980px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+  /* ---- ITG global header (matches Operations Portal) ---- */
+  :root{
+    --itg-navy:#15294d; --itg-navy-2:#1d3a68; --itg-orange:#f2a03d; --itg-teal:#00bfa5;
+    --itg-h-ink:#eaf0f8; --itg-h-dim:#9fb4d6; --itg-pill-a:#7c3aed; --itg-pill-b:#d946ef;
+  }
+  .itg-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:10px 22px;background:linear-gradient(180deg,var(--itg-navy-2),var(--itg-navy));
+    border-bottom:3px solid var(--itg-orange);font-family:'IBM Plex Sans',sans-serif}
+  .itg-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .itg-logo{height:30px;width:auto;display:block;border-radius:6px}
+  .itg-logo-fallback{display:flex;align-items:center;gap:8px}
+  .itg-logo-fallback .b{width:30px;height:30px;border-radius:7px;background:radial-gradient(circle at 30% 30%,var(--itg-orange),#e35f2a 60%,var(--itg-pill-a));flex:none}
+  .itg-logo-fallback .w{font-family:'Archivo',sans-serif;font-weight:900;font-size:13px;letter-spacing:.02em;color:#fff;line-height:1.05;text-transform:uppercase}
+  .itg-logo-fallback .w small{display:block;font-size:8.5px;letter-spacing:.22em;color:var(--itg-orange);font-weight:700}
+  .itg-user{color:var(--itg-teal);font-size:14px;font-weight:600;white-space:nowrap}
+  .itg-nav{display:flex;align-items:center;gap:14px}
+  .itg-switch{position:relative}
+  .itg-switch>button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--itg-h-ink);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;padding:7px 12px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:7px}
+  .itg-switch>button:hover{background:rgba(255,255,255,.11)}
+  .itg-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:230px;background:var(--itg-navy);
+    border:1px solid rgba(255,255,255,.14);border-radius:11px;box-shadow:0 18px 50px rgba(0,0,0,.55);padding:7px;display:none}
+  .itg-menu.open{display:block}
+  .itg-menu .grp{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--itg-h-dim);padding:9px 11px 4px}
+  .itg-menu a{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:7px;color:var(--itg-h-ink);text-decoration:none;font-size:13.5px}
+  .itg-menu a:hover{background:rgba(255,255,255,.08)}
+  .itg-menu a.here{color:var(--itg-orange)}
+  .itg-role{font-weight:700;font-size:12px;color:#fff;padding:5px 13px;border-radius:99px;
+    background:linear-gradient(90deg,var(--itg-pill-a),var(--itg-pill-b));box-shadow:0 4px 14px rgba(168,85,247,.35);white-space:nowrap}
+  .itg-signout{color:var(--itg-h-ink);font-size:13.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .itg-signout:hover{color:#fff}
+  @media(max-width:640px){.itg-user{display:none}.itg-topbar{padding:9px 14px}}
+
+</style>
+</head>
+<body>
+<header class="itg-topbar">
+  <div class="itg-brand">
+    <img class="itg-logo" id="itgLogo" alt="Inside Track Garage Doors"
+         onerror="this.style.display='none';document.getElementById('itgLogoFb').style.display='flex'">
+    <span class="itg-logo-fallback" id="itgLogoFb" style="display:none">
+      <span class="b"></span><span class="w">Inside Track<small>Garage Doors</small></span>
+    </span>
+    <span class="itg-user" id="itgUser"></span>
+  </div>
+  <nav class="itg-nav">
+    <div class="itg-switch">
+      <button id="itgSwitchBtn"><span>TOOLS</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="itg-menu" id="itgMenu"></div>
+    </div>
+    <span class="itg-role" id="itgRole"></span>
+    <a class="itg-signout" id="itgSignout">Sign out</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <h1>Market Pulse</h1>
+        <div class="sub">Executive Market Dashboard</div>
+      </div>
+    </div>
+    <div class="period">
+      Reporting period
+      <b id="period">—</b>
+      <span class="tag">Memphis Metro · DeSoto County</span>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Top Competitors by Popularity</h2>
+      <div class="hint">0–100 weighted score · rank 1 = biggest threat to Inside Track</div>
+      <table id="ranking">
+        <thead><tr><th>#</th><th>Company</th><th>Tier</th><th style="text-align:right">Mentions</th><th>Score</th><th style="text-align:right">Threat</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <h2>This Week</h2>
+        <div class="hint">Mention share &amp; response posture</div>
+        <div class="stacklist" id="weekstats"></div>
+      </div>
+      <div class="card">
+        <h2>Strongest by City</h2>
+        <div class="hint">Who leads each target market</div>
+        <div id="cities"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Response Opportunities</h2>
+      <div class="hint">Open threads where Inside Track should engage</div>
+      <div id="opps"></div>
+    </div>
+    <div class="card">
+      <h2>Speed Scoreboard</h2>
+      <div class="hint">Average first-response time by competitor</div>
+      <div id="speed"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Market Pulse is a market-intelligence tool — it never auto-posts. Suggested responses require human approval.<br>
+    Data shown is sample seed data. Swap <code>DATA</code> for <code>fetch('/api/scores?month=YYYY-MM-01')</code> to go live.
+  </div>
+</div>
+
+<script>
+/* -----------------------------------------------------------------------------
+   Sample payload — identical SHAPE to GET /api/scores. To go live, replace the
+   DATA constant with:
+     const DATA = await (await fetch('/api/scores?month=2026-06-01',
+                          { headers:{ Authorization:'Bearer '+token }})).json();
+   plus a small fetch for the post feed (GET /api/posts?should_respond=true).
+----------------------------------------------------------------------------- */
+const DATA = {
+  month: "2026-06-01",
+  ranking: [
+    { rank:1, name:"A-1 Overhead Door",     tier:"major", score:86.4, mentions:18, threat:"hi",
+      components:{response_speed:1.0} },
+    { rank:2, name:"Precision Garage Door",  tier:"major", score:61.2, mentions:12, threat:"hi",
+      components:{response_speed:0.0} },
+    { rank:3, name:"Memphis Door Pros",      tier:"minor", score:22.1, mentions:5,  threat:"md",
+      components:{response_speed:0.3} },
+    { rank:4, name:"QuickFix Garage Leads",  tier:"lead",  score:9.4,  mentions:2,  threat:"lo",
+      components:{response_speed:0.1} }
+  ],
+  city_rankings:[
+    { city:"Olive Branch", leader:"A-1 Overhead Door", mentions:6 },
+    { city:"Southaven",    leader:"A-1 Overhead Door", mentions:4 },
+    { city:"Hernando",     leader:"Precision Garage Door", mentions:3 },
+    { city:"Memphis",      leader:"Memphis Door Pros", mentions:3 },
+    { city:"Collierville", leader:"Precision Garage Door", mentions:2 }
+  ],
+  week:{
+    total_mentions:37, itg_mentions:3, competitor_mentions:34,
+    response_opportunities:9, missed_opportunities:4,
+    avg_competitor_response_min:96, fastest:{ name:"A-1 Overhead Door", min:30 }
+  },
+  opportunities:[
+    { sev:"crit", title:"Emergency spring repair · Olive Branch", sub:"FB group · 2h open · no ITG reply" },
+    { sev:"warn", title:"Negative Precision mention · Southaven", sub:"Nextdoor · price complaint · winnable" },
+    { sev:"",     title:"Opener repair question · Memphis",       sub:"Reddit · low urgency · advice angle" },
+    { sev:"warn", title:"Recommendation request · Hernando",      sub:"FB group · 40m open · A-1 already replied" }
+  ],
+  speed:[
+    { name:"A-1 Overhead Door", min:30 },
+    { name:"Memphis Door Pros", min:75 },
+    { name:"Precision Garage Door", min:240 },
+    { name:"Inside Track (target)", min:15, self:true }
+  ]
+};
+
+const $ = (s,el=document)=>el.querySelector(s);
+const el = (t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const fmtMonth = m => new Date(m+"T00:00:00").toLocaleDateString('en-US',{month:'long',year:'numeric'});
+
+function render(d){
+  $("#period").textContent = fmtMonth(d.month);
+
+  // KPIs
+  const w=d.week;
+  const itgShare = Math.round(100*w.itg_mentions/Math.max(1,w.total_mentions));
+  const kpis=[
+    {lab:"Mention volume · wk", val:w.total_mentions, meta:`Competitors ${w.competitor_mentions} · ITG ${w.itg_mentions}`, cls:""},
+    {lab:"Inside Track share", val:itgShare+"%", meta:`<span class="delta down">▼ trailing field</span>`, cls:"amber"},
+    {lab:"Response opportunities", val:w.response_opportunities, meta:`<span class="delta down">${w.missed_opportunities} missed</span> this week`, cls:"green"},
+    {lab:"Avg competitor reply", val:w.avg_competitor_response_min+"m", meta:`Fastest: ${w.fastest.name} (${w.fastest.min}m)`, cls:"red"}
+  ];
+  const kc=$("#kpis"); kc.innerHTML="";
+  kpis.forEach(k=>{const c=el("div","kpi "+k.cls);
+    c.innerHTML=`<span class="accent"></span><div class="lab">${k.lab}</div><div class="val">${k.val}</div><div class="meta">${k.meta}</div>`;
+    kc.appendChild(c);});
+
+  // Ranking table
+  const max=Math.max(...d.ranking.map(r=>r.score));
+  const tb=$("#ranking tbody"); tb.innerHTML="";
+  d.ranking.forEach(r=>{
+    const tier = r.tier==="major"?'<span class="pill major">major</span>'
+               : r.tier==="lead" ?'<span class="pill lead">lead-gen</span>'
+               : '<span class="pill minor">minor</span>';
+    const th = r.threat==="hi"?'<span class="threat hi">HIGH</span>'
+             : r.threat==="md"?'<span class="threat md">MED</span>'
+             : '<span class="threat lo">LOW</span>';
+    const tr=el("tr");
+    tr.innerHTML=`<td class="rank r${r.rank}">${r.rank}</td>
+      <td class="co">${r.name}</td>
+      <td>${tier}</td>
+      <td class="num">${r.mentions}</td>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="bar" style="flex:1"><i style="width:${Math.round(100*r.score/max)}%"></i></div>
+        <span class="score">${r.score.toFixed(1)}</span></div></td>
+      <td style="text-align:right">${th}</td>`;
+    tb.appendChild(tr);
+  });
+
+  // Week stats stack
+  const ws=$("#weekstats"); ws.innerHTML="";
+  [["Competitor mentions",w.competitor_mentions],
+   ["Inside Track mentions",w.itg_mentions],
+   ["Open opportunities",w.response_opportunities],
+   ["Missed (aged out)",w.missed_opportunities]].forEach(([k,v])=>{
+    const row=el("div","row2");row.innerHTML=`<span class="k">${k}</span><span class="v">${v}</span>`;ws.appendChild(row);});
+
+  // Cities
+  const cc=$("#cities"); cc.innerHTML="";
+  d.city_rankings.forEach(c=>{const r=el("div","city");
+    r.innerHTML=`<span><span class="leader">${c.leader}</span> <span class="m">leads ${c.city}</span></span><span class="m">${c.mentions} mentions</span>`;cc.appendChild(r);});
+
+  // Opportunities
+  const oc=$("#opps"); oc.innerHTML="";
+  d.opportunities.forEach(o=>{const r=el("div","opp "+(o.sev||""));
+    r.innerHTML=`<span class="dot"></span><div><div class="t">${o.title}</div><div class="s">${o.sub}</div></div>`;oc.appendChild(r);});
+
+  // Speed scoreboard
+  const sc=$("#speed"); sc.innerHTML="";
+  const smax=Math.max(...d.speed.map(s=>s.min));
+  d.speed.forEach(s=>{
+    const r=el("div","city");
+    const w2=Math.round(100*s.min/smax);
+    const col=s.self?'var(--green)':'var(--orange)';
+    r.innerHTML=`<span style="flex:1"><span class="leader" style="${s.self?'color:var(--green)':''}">${s.name}</span>
+      <div class="bar" style="margin-top:6px;max-width:220px"><i style="width:${w2}%;background:${col}"></i></div></span>
+      <span class="m">${s.min}m</span>`;
+    sc.appendChild(r);
+  });
+}
+render(DATA);
+</script>
+<script>
+/* ITG header — set these for your deployment */
+const ITG_HEADER={ user:'Justin', role:'Owner', logo:'https://insidetrackapps.com/inside-track-web-transparent_logo-color.png', current:'market-pulse',
+  signout:()=>{ location.href='/logout'; } };
+const ITG_TOOLS=[
+ {group:'Field Operations',items:[
+   {key:'portal',name:'Operations Portal',url:'/portal.html'},
+   {key:'inspection',name:'Inspection App',url:'/inspection'},
+   {key:'spring',name:'Spring Calculator',url:'/spring'}]},
+ {group:'Marketing & Growth',items:[
+   {key:'attribution',name:'Attribution Dashboard',url:'/attribution'},
+   {key:'market-pulse',name:'Market Pulse',url:'/market-pulse'},
+   {key:'social-capture',name:'Add Social Post',url:'/market-pulse/social-capture.html'}]},
+ {group:'Admin',items:[
+   {key:'hub',name:'All Tools (Hub)',url:'/hub.html'},
+   {key:'careers',name:'Careers Page',url:'/careers'}]},
+];
+(function(){
+  document.getElementById('itgUser').textContent=ITG_HEADER.user||'';
+  document.getElementById('itgRole').textContent=ITG_HEADER.role||'';
+  var lg=document.getElementById('itgLogo');
+  if(ITG_HEADER.logo)lg.src=ITG_HEADER.logo;else lg.dispatchEvent(new Event('error'));
+  document.getElementById('itgSignout').onclick=ITG_HEADER.signout;
+  var menu=document.getElementById('itgMenu');
+  ITG_TOOLS.forEach(function(g){var h=document.createElement('div');h.className='grp';h.textContent=g.group;menu.appendChild(h);
+    g.items.forEach(function(it){var a=document.createElement('a');a.href=it.url;a.textContent=it.name;
+      if(it.key===ITG_HEADER.current)a.classList.add('here');menu.appendChild(a);});});
+  var b=document.getElementById('itgSwitchBtn');
+  b.onclick=function(e){e.stopPropagation();menu.classList.toggle('open');};
+  document.addEventListener('click',function(){menu.classList.remove('open');});
+})();
+</script>
+
+</body>
+</html>

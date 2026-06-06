@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Pulse — Add Social Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1114;--surface:#14171a;--surface-2:#1b1f24;--line:#262b31;
+    --ink:#eef1f4;--ink-dim:#9aa4ad;--ink-faint:#69727b;
+    --orange:#ff5a1f;--green:#25b865;--red:#ef4444;--amber:#f5a524;
+    --display:'Archivo',sans-serif;--body:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+    background-image:radial-gradient(circle at 90% -10%,rgba(255,90,31,.06),transparent 42%)}
+  .wrap{max-width:760px;margin:0 auto;padding:26px 22px 70px}
+  header.top{display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:22px}
+  .mark{width:38px;height:38px;border-radius:8px;background:var(--orange);position:relative;flex:none;box-shadow:0 6px 18px rgba(255,90,31,.25)}
+  .mark::before,.mark::after{content:"";position:absolute;background:#0e1114}
+  .mark::before{inset:8px 8px auto 8px;height:4px}
+  .mark::after{inset:16px 8px 8px 8px;width:4px;left:17px}
+  h1{font-family:var(--display);font-weight:900;font-size:20px;margin:0;letter-spacing:-.02em}
+  .sub{color:var(--ink-faint);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-top:4px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:20px 22px;margin-bottom:16px}
+  label{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);margin:14px 0 6px}
+  label .req{color:var(--orange)}
+  input,select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
+    color:var(--ink);font-family:var(--body);font-size:14px;padding:10px 12px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--orange)}
+  textarea{min-height:120px;resize:vertical;line-height:1.5}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .hint{font-size:12px;color:var(--ink-faint);margin-top:5px;line-height:1.5}
+  .btn{font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:.02em;border:none;border-radius:9px;
+    padding:13px 20px;cursor:pointer;transition:transform .05s}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--orange);color:#1a0d05;width:100%}
+  .btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+  .btnrow{display:flex;gap:10px;margin-top:18px}
+  .pillrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .pill{font-family:var(--mono);font-size:11px;padding:6px 11px;border-radius:99px;border:1px solid var(--line);
+    background:var(--surface-2);color:var(--ink-dim);cursor:pointer}
+  .pill.on{background:rgba(255,90,31,.14);border-color:var(--orange);color:var(--orange)}
+  .note{font-size:12px;color:var(--ink-faint);font-family:var(--mono);line-height:1.7;
+    border-left:2px solid var(--line);padding-left:12px;margin-top:6px}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;padding:13px 18px;font-size:14px;
+    box-shadow:0 12px 40px rgba(0,0,0,.5);display:none;align-items:center;gap:10px}
+  .toast.show{display:flex}
+  .toast .dot{width:9px;height:9px;border-radius:99px;background:var(--green)}
+  .toast.err .dot{background:var(--red)}
+  .secth{font-family:var(--display);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-dim);margin:0 0 2px}
+  /* ---- ITG global header (matches Operations Portal) ---- */
+  :root{
+    --itg-navy:#15294d; --itg-navy-2:#1d3a68; --itg-orange:#f2a03d; --itg-teal:#00bfa5;
+    --itg-h-ink:#eaf0f8; --itg-h-dim:#9fb4d6; --itg-pill-a:#7c3aed; --itg-pill-b:#d946ef;
+  }
+  .itg-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:10px 22px;background:linear-gradient(180deg,var(--itg-navy-2),var(--itg-navy));
+    border-bottom:3px solid var(--itg-orange);font-family:'IBM Plex Sans',sans-serif}
+  .itg-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .itg-logo{height:30px;width:auto;display:block;border-radius:6px}
+  .itg-logo-fallback{display:flex;align-items:center;gap:8px}
+  .itg-logo-fallback .b{width:30px;height:30px;border-radius:7px;background:radial-gradient(circle at 30% 30%,var(--itg-orange),#e35f2a 60%,var(--itg-pill-a));flex:none}
+  .itg-logo-fallback .w{font-family:'Archivo',sans-serif;font-weight:900;font-size:13px;letter-spacing:.02em;color:#fff;line-height:1.05;text-transform:uppercase}
+  .itg-logo-fallback .w small{display:block;font-size:8.5px;letter-spacing:.22em;color:var(--itg-orange);font-weight:700}
+  .itg-user{color:var(--itg-teal);font-size:14px;font-weight:600;white-space:nowrap}
+  .itg-nav{display:flex;align-items:center;gap:14px}
+  .itg-switch{position:relative}
+  .itg-switch>button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--itg-h-ink);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;padding:7px 12px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:7px}
+  .itg-switch>button:hover{background:rgba(255,255,255,.11)}
+  .itg-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:230px;background:var(--itg-navy);
+    border:1px solid rgba(255,255,255,.14);border-radius:11px;box-shadow:0 18px 50px rgba(0,0,0,.55);padding:7px;display:none}
+  .itg-menu.open{display:block}
+  .itg-menu .grp{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--itg-h-dim);padding:9px 11px 4px}
+  .itg-menu a{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:7px;color:var(--itg-h-ink);text-decoration:none;font-size:13.5px}
+  .itg-menu a:hover{background:rgba(255,255,255,.08)}
+  .itg-menu a.here{color:var(--itg-orange)}
+  .itg-role{font-weight:700;font-size:12px;color:#fff;padding:5px 13px;border-radius:99px;
+    background:linear-gradient(90deg,var(--itg-pill-a),var(--itg-pill-b));box-shadow:0 4px 14px rgba(168,85,247,.35);white-space:nowrap}
+  .itg-signout{color:var(--itg-h-ink);font-size:13.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .itg-signout:hover{color:#fff}
+  @media(max-width:640px){.itg-user{display:none}.itg-topbar{padding:9px 14px}}
+
+</style>
+</head>
+<body>
+<header class="itg-topbar">
+  <div class="itg-brand">
+    <img class="itg-logo" id="itgLogo" alt="Inside Track Garage Doors"
+         onerror="this.style.display='none';document.getElementById('itgLogoFb').style.display='flex'">
+    <span class="itg-logo-fallback" id="itgLogoFb" style="display:none">
+      <span class="b"></span><span class="w">Inside Track<small>Garage Doors</small></span>
+    </span>
+    <span class="itg-user" id="itgUser"></span>
+  </div>
+  <nav class="itg-nav">
+    <div class="itg-switch">
+      <button id="itgSwitchBtn"><span>TOOLS</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="itg-menu" id="itgMenu"></div>
+    </div>
+    <span class="itg-role" id="itgRole"></span>
+    <a class="itg-signout" id="itgSignout">Sign out</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <header class="top">
+    <div class="mark"></div>
+    <div>
+      <h1>Add Social Post</h1>
+      <div class="sub">Manual capture · Facebook &amp; Nextdoor</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <p class="secth">Step 1 — Location</p>
+    <label>Market / location <span class="req">*</span></label>
+    <select id="market"></select>
+    <div class="hint">Each location is tracked separately. Pick the market this post belongs to so it scores against the right competitors.</div>
+  </div>
+
+  <div class="card">
+    <p class="secth">Step 2 — Paste the post</p>
+    <label>Post text <span class="req">*</span></label>
+    <textarea id="raw_text" placeholder="Paste exactly what the neighbor wrote, e.g. 'My garage door spring snapped — who do y'all recommend in Olive Branch?'"></textarea>
+    <div class="hint">Copy the wording as-is. Don't include private names beyond what's needed. A screenshot link can go in the source field below.</div>
+
+    <div class="row" style="margin-top:4px">
+      <div>
+        <label>Platform <span class="req">*</span></label>
+        <select id="platform">
+          <option value="facebook_group">Facebook group</option>
+          <option value="facebook_page">Facebook page</option>
+          <option value="nextdoor">Nextdoor</option>
+          <option value="forum">Forum</option>
+          <option value="directory_qa">Directory Q&amp;A</option>
+        </select>
+      </div>
+      <div>
+        <label>Group / page name</label>
+        <input id="group_name" placeholder="Olive Branch Community">
+      </div>
+    </div>
+
+    <div class="row3">
+      <div>
+        <label>City</label>
+        <input id="city" placeholder="Olive Branch">
+      </div>
+      <div>
+        <label>Posted</label>
+        <input id="post_datetime" type="datetime-local">
+      </div>
+      <div>
+        <label>How captured</label>
+        <select id="capture_method">
+          <option value="manual_entry">Typed in</option>
+          <option value="screenshot_upload">Screenshot</option>
+          <option value="authorized_export">Authorized export</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Source link or screenshot URL (optional)</label>
+    <input id="original_url" placeholder="https://… (or leave blank for a typed-in post)">
+  </div>
+
+  <div class="card">
+    <p class="secth">Step 3 — Quick tags <span style="color:var(--ink-faint);font-weight:400">(optional — AI fills the rest)</span></p>
+    <label>Request type</label>
+    <div class="pillrow" id="cats"></div>
+    <label style="margin-top:14px">Urgency</label>
+    <div class="pillrow" id="urg"></div>
+    <label style="margin-top:14px"><input type="checkbox" id="itg_mentioned" style="width:auto;margin-right:8px;vertical-align:middle">Inside Track was mentioned in this thread</label>
+
+    <div class="btnrow">
+      <button class="btn primary" id="save">Save &amp; analyze post</button>
+    </div>
+    <div class="note" style="margin-top:14px">
+      This saves the post, then runs AI classification (competitors named, sentiment, whether to respond) and raises any alerts.
+      Nothing is ever posted anywhere — suggested replies always wait for your approval.
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toasttext">Saved</span></div>
+
+<script>
+/* ----------------------------------------------------------------------------
+   CONFIG — set these two for your deployment, then this page is fully live.
+   API_BASE: where the /api routes are served (same origin if hosted together).
+   getToken(): return the signed-in user's Supabase access token.
+---------------------------------------------------------------------------- */
+const API_BASE = '';                         // '' = same origin
+async function getToken(){ return window.__MP_TOKEN || ''; }  // wire to Supabase auth
+
+const CATS = [['company_recommendation','Recommendation'],['spring_repair','Spring'],
+  ['opener_repair','Opener'],['broken_door','Broken door'],['off_track','Off track'],
+  ['emergency','Emergency'],['installation','New install'],['other','Other']];
+const URG = [['emergency','Emergency'],['high','High'],['medium','Medium'],['low','Low']];
+
+let pickedCat=null, pickedUrg=null;
+const $=id=>document.getElementById(id);
+
+function renderPills(el,opts,onPick){
+  el.innerHTML='';
+  opts.forEach(([val,label])=>{
+    const b=document.createElement('span');b.className='pill';b.textContent=label;
+    b.onclick=()=>{[...el.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');onPick(val);};
+    el.appendChild(b);
+  });
+}
+renderPills($('cats'),CATS,v=>pickedCat=v);
+renderPills($('urg'),URG,v=>pickedUrg=v);
+
+// Load markets for the dropdown (falls back to the two seeded markets offline).
+async function loadMarkets(){
+  const sel=$('market');
+  try{
+    const t=await getToken();
+    const r=await fetch(API_BASE+'/api/markets',{headers:t?{Authorization:'Bearer '+t}:{}});
+    const {markets}=await r.json();
+    fill(sel,markets);
+  }catch(e){
+    fill(sel,[{id:'aa000000-0000-4000-8000-000000000001',name:'Memphis Metro + DeSoto'},
+              {id:'aa000000-0000-4000-8000-000000000002',name:'Jackson MS'}]);
+  }
+}
+function fill(sel,markets){
+  sel.innerHTML='';
+  (markets||[]).forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;sel.appendChild(o);});
+}
+loadMarkets();
+
+function toast(msg,err){
+  const t=$('toast');$('toasttext').textContent=msg;t.classList.toggle('err',!!err);
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+$('save').onclick=async()=>{
+  const body={
+    market_id:$('market').value,
+    platform:$('platform').value,
+    group_name:$('group_name').value||null,
+    city:$('city').value||null,
+    post_datetime:$('post_datetime').value?new Date($('post_datetime').value).toISOString():null,
+    original_url:$('original_url').value||null,
+    capture_method:$('capture_method').value,
+    raw_text:$('raw_text').value.trim(),
+    request_category:pickedCat,urgency:pickedUrg,
+    itg_mentioned:$('itg_mentioned').checked,
+  };
+  if(!body.raw_text){toast('Paste the post text first',true);return;}
+  if(!body.market_id){toast('Pick a market',true);return;}
+
+  const btn=$('save');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const t=await getToken();
+    const headers={'content-type':'application/json',...(t?{Authorization:'Bearer '+t}:{})};
+    const r=await fetch(API_BASE+'/api/posts',{method:'POST',headers,body:JSON.stringify(body)});
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'save failed');
+    const postId=data.post?.id||data.post_id;
+    if(data.duplicate){toast('Already captured (duplicate)');}
+    else{
+      // fire-and-forget AI analysis
+      fetch(API_BASE+'/api/analyze',{method:'POST',headers,body:JSON.stringify({post_id:postId})}).catch(()=>{});
+      toast('Saved — analyzing in the background');
+    }
+    // reset for the next one
+    ['raw_text','group_name','city','original_url'].forEach(id=>$(id).value='');
+    $('post_datetime').value='';$('itg_mentioned').checked=false;
+    pickedCat=pickedUrg=null;
+    [...$('cats').children,...$('urg').children].forEach(c=>c.classList.remove('on'));
+  }catch(e){toast(e.message,true);}
+  finally{btn.disabled=false;btn.textContent='Save & analyze post';}
+};
+</script>
+<script>
+/* ITG header — set these for your deployment */
+const ITG_HEADER={ user:'Justin', role:'Owner', logo:'https://insidetrackapps.com/inside-track-web-transparent_logo-color.png', current:'social-capture',
+  signout:()=>{ location.href='/logout'; } };
+const ITG_TOOLS=[
+ {group:'Field Operations',items:[
+   {key:'portal',name:'Operations Portal',url:'/portal.html'},
+   {key:'inspection',name:'Inspection App',url:'/inspection'},
+   {key:'spring',name:'Spring Calculator',url:'/spring'}]},
+ {group:'Marketing & Growth',items:[
+   {key:'attribution',name:'Attribution Dashboard',url:'/attribution'},
+   {key:'market-pulse',name:'Market Pulse',url:'/market-pulse'},
+   {key:'social-capture',name:'Add Social Post',url:'/market-pulse/social-capture.html'}]},
+ {group:'Admin',items:[
+   {key:'hub',name:'All Tools (Hub)',url:'/hub.html'},
+   {key:'careers',name:'Careers Page',url:'/careers'}]},
+];
+(function(){
+  document.getElementById('itgUser').textContent=ITG_HEADER.user||'';
+  document.getElementById('itgRole').textContent=ITG_HEADER.role||'';
+  var lg=document.getElementById('itgLogo');
+  if(ITG_HEADER.logo)lg.src=ITG_HEADER.logo;else lg.dispatchEvent(new Event('error'));
+  document.getElementById('itgSignout').onclick=ITG_HEADER.signout;
+  var menu=document.getElementById('itgMenu');
+  ITG_TOOLS.forEach(function(g){var h=document.createElement('div');h.className='grp';h.textContent=g.group;menu.appendChild(h);
+    g.items.forEach(function(it){var a=document.createElement('a');a.href=it.url;a.textContent=it.name;
+      if(it.key===ITG_HEADER.current)a.classList.add('here');menu.appendChild(a);});});
+  var b=document.getElementById('itgSwitchBtn');
+  b.onclick=function(e){e.stopPropagation();menu.classList.toggle('open');};
+  document.addEventListener('click',function(){menu.classList.remove('open');});
+})();
+</script>
+
+</body>
+</html>

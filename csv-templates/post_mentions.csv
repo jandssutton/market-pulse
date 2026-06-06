@@ -1,0 +1,4 @@
+post_original_url,competitor_name,mention_count,mentioned_by,sentiment,unprompted,is_winner
+https://facebook.com/groups/ob/posts/1,A-1 Overhead Door,2,Sarah M,positive,true,true
+https://facebook.com/groups/ob/posts/1,Precision Garage Door,1,Dave R,neutral,false,false
+https://nextdoor.com/p/2,Precision Garage Door,1,original poster,negative,false,false
