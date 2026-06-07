@@ -109,17 +109,17 @@ const CURRENT_ROLE = 'admin';   // admin sees everything
    accent: tile color. Edit url to match your real paths. */
 const TOOLS = [
  { group:'Field Operations', tiles:[
-   { name:'Operations Portal', desc:'Pre-trip, fleet, inventory, people, incidents.', url:'/portal.html', accent:'#3b82f6', icon:'grid' },
-   { name:'Inspection App', desc:'Door safety assessments and history.', url:'/inspection', accent:'#00bfa5', icon:'clipboard' },
-   { name:'Spring Calculator', desc:'Field spring matrix tie-breaker.', url:'/spring', accent:'#f2a03d', icon:'wrench' },
+   { name:'Operations Portal', desc:'Pre-trip, fleet, inventory, people, incidents.', url:'https://insidetrackapps.com/portal.html', accent:'#3b82f6', icon:'grid' },
+   { name:'Inspection App', desc:'Door safety assessments and history.', url:'https://insidetrackapps.com/', accent:'#00bfa5', icon:'clipboard' },
+   { name:'Spring Calculator', desc:'Field spring matrix tie-breaker.', url:'https://insidetrackapps.com/', accent:'#f2a03d', icon:'wrench' },
  ]},
  { group:'Marketing & Growth', tiles:[
-   { name:'Attribution Dashboard', desc:'Spend → lead → job → revenue → reviews.', url:'/attribution', accent:'#25b865', icon:'chart', roles:['admin','manager','partner_viewer','marketing_manager'] },
-   { name:'Market Pulse', desc:'Competitor popularity by market.', url:'/market-pulse', accent:'#ff5a1f', icon:'pulse', roles:['admin','marketing_manager','reviewer','read_only_partner'] },
-   { name:'Add Social Post', desc:'Log a Facebook / Nextdoor post.', url:'/market-pulse/social-capture.html', accent:'#a855f7', icon:'plus', roles:['admin','marketing_manager','reviewer'] },
+   { name:'Attribution Dashboard', desc:'Spend → lead → job → revenue → reviews.', url:'https://insidetrackapps.com/', accent:'#25b865', icon:'chart', roles:['admin','manager','partner_viewer','marketing_manager'] },
+   { name:'Market Pulse', desc:'Competitor popularity by market.', url:'/executive-market-dashboard.html', accent:'#ff5a1f', icon:'pulse', roles:['admin','marketing_manager','reviewer','read_only_partner'] },
+   { name:'Add Social Post', desc:'Log a Facebook / Nextdoor post.', url:'/social-capture.html', accent:'#a855f7', icon:'plus', roles:['admin','marketing_manager','reviewer'] },
  ]},
  { group:'Admin & Hiring', tiles:[
-   { name:'Careers Page', desc:'Applicant tracking and public listing.', url:'/careers', accent:'#f2a03d', icon:'user', roles:['admin','manager','marketing_manager'] },
+   { name:'Careers Page', desc:'Applicant tracking and public listing.', url:'https://insidetrackapps.com/', accent:'#f2a03d', icon:'user', roles:['admin','manager','marketing_manager'] },
  ]},
 ];
 
@@ -159,16 +159,16 @@ const ITG_HEADER={ user:'Justin', role:'Owner', logo:'https://insidetrackapps.co
   signout:()=>{ location.href='/logout'; } };
 const ITG_TOOLS=[
  {group:'Field Operations',items:[
-   {key:'portal',name:'Operations Portal',url:'/portal.html'},
-   {key:'inspection',name:'Inspection App',url:'/inspection'},
-   {key:'spring',name:'Spring Calculator',url:'/spring'}]},
+   {key:'portal',name:'Operations Portal',url:'https://insidetrackapps.com/portal.html'},
+   {key:'inspection',name:'Inspection App',url:'https://insidetrackapps.com/'},
+   {key:'spring',name:'Spring Calculator',url:'https://insidetrackapps.com/'}]},
  {group:'Marketing & Growth',items:[
-   {key:'attribution',name:'Attribution Dashboard',url:'/attribution'},
-   {key:'market-pulse',name:'Market Pulse',url:'/market-pulse'},
-   {key:'social-capture',name:'Add Social Post',url:'/market-pulse/social-capture.html'}]},
+   {key:'attribution',name:'Attribution Dashboard',url:'https://insidetrackapps.com/'},
+   {key:'market-pulse',name:'Market Pulse',url:'/executive-market-dashboard.html'},
+   {key:'social-capture',name:'Add Social Post',url:'/social-capture.html'}]},
  {group:'Admin',items:[
-   {key:'hub',name:'All Tools (Hub)',url:'/hub.html'},
-   {key:'careers',name:'Careers Page',url:'/careers'}]},
+   {key:'hub',name:'All Tools (Hub)',url:'/index.html'},
+   {key:'careers',name:'Careers Page',url:'https://insidetrackapps.com/'}]},
 ];
 (function(){
   document.getElementById('itgUser').textContent=ITG_HEADER.user||'';
